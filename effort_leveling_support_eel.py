@@ -3,8 +3,9 @@ import eel
 
 # JavaScript から関数を呼び出すデコレータです。
 @eel.expose
-def calculate():
-    print('hello eel')
+def get_calculation_result_text(ev: int, pokemon_num: int) -> str:
+    print(repr(ev), repr(pokemon_num))
+    return 'test text!!'
 
 
 # ウェブコンテンツの含まれるディレクトリを指定します。
