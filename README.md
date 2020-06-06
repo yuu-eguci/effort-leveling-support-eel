@@ -3,6 +3,8 @@ effort-leveling-support-eel
 
 This app supports pokemon effort leveling.
 
+Remake app of https://github.com/yuu-eguci/effort-leveling-support
+
 ![1](https://user-images.githubusercontent.com/28250432/83946778-de13a900-a84d-11ea-9869-4e699a34ee53.png)
 
 ![2](https://user-images.githubusercontent.com/28250432/83946780-df44d600-a84d-11ea-8056-4921fd46d834.png)
