@@ -41,8 +41,7 @@
         <!-- 結果表示欄です。 -->
         <div id="div_alert" class="alert alert-info text-center" role="alert">
           A simple info alert—check it out!
-          Give power-item each of them <span class="emphasize">10 times</span> in flock battle.
-          Then kick <span class="emphasize">2 pokemons'</span> ass.
+
         </div>
 
         <!-- EV を書くフォームです。 -->
@@ -111,8 +110,7 @@
       // NOTE: Python 関数の返り値は await で受け取ります。
       // NOTE: Python 関数の返り値は callback 関数みたいです。
       const calculationResultText = await eel.get_calculation_result_text(evInt, pokemonNumInt)();
-      console.info(calculationResultText);
-      $('#div_alert').text(calculationResultText);
+      $('#div_alert').html(calculationResultText);
 
     }
   </script>
