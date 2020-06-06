@@ -56,4 +56,4 @@ def calculate(ev: int, num: int) -> tuple:
 eel.init('web')
 
 # 最初に表示する html です。
-eel.start('index.html')
+eel.start('index.html', size=(650, 500))
