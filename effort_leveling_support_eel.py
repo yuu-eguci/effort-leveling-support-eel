@@ -9,7 +9,7 @@ def get_calculation_result_text(ev: int, pokemon_num: int) -> str:
     try:
         x, y = calculate(ev, pokemon_num)
         return ' '.join([
-            f'Give power-item each of them <span class="emphasize">{x} times</span> in flock battle.',
+            f'Give power-item each of them <span class="emphasize">{x} times</span> in flock battle.',  # noqa: E501
             f'Then kick <span class="emphasize">{y} pokemons\'</span> ass.'
         ])
     except ValueError as e:
