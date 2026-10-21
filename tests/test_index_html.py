@@ -11,12 +11,21 @@ class _Collector(HTMLParser):
         super().__init__()
         self.assets = []
         self.elements = {}
+        self.labels = []
+        self.html_attrs = {}
+        self.meta_charsets = []
         self._form_depth = 0
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
         if tag == 'form':
             self._form_depth += 1
+        if tag == 'html':
+            self.html_attrs = attrs
+        if tag == 'meta' and 'charset' in attrs:
+            self.meta_charsets.append(attrs['charset'])
+        if tag == 'label':
+            self.labels.append(attrs)
         if tag == 'script' and 'src' in attrs:
             self.assets.append(attrs['src'])
         if tag == 'link' and attrs.get('rel') == 'stylesheet':
@@ -57,3 +66,16 @@ def test_inputs_accept_only_positive_integers():
     for element_id in ('input_ev', 'input_pokemon_num'):
         assert elements[element_id]['min'] == '1', element_id
         assert elements[element_id]['step'] == '1', element_id
+
+
+def test_labels_point_to_inputs():
+    collector = _collect()
+    assert collector.labels
+    for label in collector.labels:
+        assert collector.elements[label['for']]['type'] == 'number', label
+
+
+def test_document_declares_language_and_charset():
+    collector = _collect()
+    assert collector.html_attrs.get('lang') == 'en'
+    assert [c.lower() for c in collector.meta_charsets] == ['utf-8']
