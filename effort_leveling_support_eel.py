@@ -8,10 +8,12 @@ def get_calculation_result_text(ev: int, pokemon_num: int) -> str:
 
     try:
         x, y = calculate(ev, pokemon_num)
-        return ' '.join([
-            f'Give power-item each of them <span class="emphasize">{x} times</span> in flock battle.',  # noqa: E501
-            f'Then kick <span class="emphasize">{y} pokemons\'</span> ass.'
-        ])
+        return ' '.join(
+            [
+                f'Give power-item each of them <span class="emphasize">{x} times</span> in flock battle.',  # noqa: E501
+                f'Then kick <span class="emphasize">{y} pokemons\'</span> ass.',
+            ]
+        )
     except ValueError as e:
         print(e)
         return 'Invalid values were input.'
@@ -52,8 +54,15 @@ def calculate(ev: int, num: int) -> tuple:
             return (x, y)
 
 
-# ウェブコンテンツの含まれるディレクトリを指定します。
-eel.init('web')
+def main() -> None:
+    """アプリを起動します。"""
 
-# 最初に表示する html です。
-eel.start('index.html', size=(650, 500))
+    # ウェブコンテンツの含まれるディレクトリを指定します。
+    eel.init('web')
+
+    # 最初に表示する html です。
+    eel.start('index.html', size=(650, 500))
+
+
+if __name__ == '__main__':
+    main()
