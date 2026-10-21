@@ -25,6 +25,7 @@ pipenv run python effort_leveling_support_eel.py
 ```
 
 Chrome または Chromium のウィンドウでアプリが開く。
+どっちもなければ既定のブラウザで開く。
 
 `EEL_SERVER_MODE=1` でブラウザを開かずにサーバだけ起動。
 Docker はこのモードを使う。

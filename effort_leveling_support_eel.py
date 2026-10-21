@@ -86,6 +86,11 @@ def main() -> None:
         )
         return
 
+    # Chrome も Chromium も見つからないときは、既定のブラウザで開きます。
+    if eel.chrome.find_path() is None:
+        eel.start('index.html', mode='default')
+        return
+
     # 最初に表示する html です。
     eel.start('index.html', size=(650, 500))
 
