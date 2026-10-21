@@ -1,11 +1,17 @@
-FROM python:3.14-slim
-
-WORKDIR /app
+# Pipfile.lock から requirements.txt を書き出すためだけのステージです。
+FROM python:3.14-slim AS requirements
 
 RUN pip install --no-cache-dir pipenv
 
 COPY Pipfile Pipfile.lock ./
-RUN pipenv install --system --deploy
+RUN pipenv requirements --hash > requirements.txt
+
+FROM python:3.14-slim
+
+WORKDIR /app
+
+COPY --from=requirements requirements.txt ./
+RUN pip install --no-cache-dir -r requirements.txt
 
 COPY effort_leveling_support_eel.py ./
 COPY web ./web
