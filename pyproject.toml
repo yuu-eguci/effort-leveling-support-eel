@@ -10,3 +10,8 @@ quote-style = "single"
 [tool.pytest.ini_options]
 pythonpath = ["."]
 testpaths = ["tests"]
+filterwarnings = [
+    "error",
+    # eel 本体が古い pyparsing の書き方を使っているため、eel 由来の非推奨警告だけ無視します。
+    "ignore::DeprecationWarning:eel",
+]
