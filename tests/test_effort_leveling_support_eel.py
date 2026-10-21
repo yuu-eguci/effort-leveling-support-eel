@@ -19,6 +19,7 @@ def app(monkeypatch):
     )
     monkeypatch.delenv('EEL_SERVER_MODE', raising=False)
     monkeypatch.delenv('EEL_HOST', raising=False)
+    monkeypatch.setattr(eel.chrome, 'find_path', lambda: '/path/to/chrome')
     sys.modules.pop('effort_leveling_support_eel', None)
     module = importlib.import_module('effort_leveling_support_eel')
     module.calls = calls
@@ -121,3 +122,9 @@ def test_main_uses_eel_host_in_server_mode(app, monkeypatch):
     monkeypatch.setenv('EEL_HOST', '0.0.0.0')
     app.main()
     assert app.calls[-1][2]['host'] == '0.0.0.0'
+
+
+def test_main_falls_back_to_default_browser_without_chrome(app, monkeypatch):
+    monkeypatch.setattr(eel.chrome, 'find_path', lambda: None)
+    app.main()
+    assert app.calls[-1] == ('start', ('index.html',), {'mode': 'default'})
