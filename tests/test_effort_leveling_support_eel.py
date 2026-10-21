@@ -86,10 +86,29 @@ def test_calculate_rejects_invalid_values(app, ev, num):
         app.calculate(ev, num)
 
 
-def test_get_calculation_result_text(app):
-    text = app.get_calculation_result_text(252, 1)
-    assert '<span class="emphasize">10 times</span>' in text
-    assert '<span class="emphasize">2 pokemons\'</span>' in text
+FLOCK_10 = 'Give power-item each of them <span class="emphasize">10 times</span> in flock battle.'  # noqa: E501
+FLOCK_1 = 'Give power-item each of them <span class="emphasize">1 time</span> in flock battle.'  # noqa: E501
+
+
+@pytest.mark.parametrize(
+    ('ev', 'num', 'expected'),
+    [
+        (
+            252,
+            1,
+            f'{FLOCK_10} Then kick <span class="emphasize">2 pokemons\'</span> ass.',
+        ),
+        (
+            26,
+            1,
+            f'{FLOCK_1} Then kick <span class="emphasize">1 pokemon\'s</span> ass.',
+        ),
+        (25, 1, FLOCK_1),
+        (24, 1, 'Kick <span class="emphasize">24 pokemons\'</span> ass.'),
+    ],
+)
+def test_get_calculation_result_text(app, ev, num, expected):
+    assert app.get_calculation_result_text(ev, num) == expected
 
 
 @pytest.mark.parametrize(('ev', 'num'), [(0, 1), (2.5, 1), (None, 1)])

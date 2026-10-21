@@ -10,12 +10,21 @@ def get_calculation_result_text(ev: int, pokemon_num: int) -> str:
 
     try:
         x, y = calculate(ev, pokemon_num)
-        return ' '.join(
-            [
-                f'Give power-item each of them <span class="emphasize">{x} times</span> in flock battle.',  # noqa: E501
-                f'Then kick <span class="emphasize">{y} pokemons\'</span> ass.',
-            ]
-        )
+
+        # 0 回の手順は省き、回数と体数は単数形と複数形を使い分けます。
+        sentences = []
+        if x > 0:
+            times = 'time' if x == 1 else 'times'
+            sentences.append(
+                f'Give power-item each of them <span class="emphasize">{x} {times}</span> in flock battle.'  # noqa: E501
+            )
+        if y > 0:
+            kick = 'Then kick' if x > 0 else 'Kick'
+            pokemons = "pokemon's" if y == 1 else "pokemons'"
+            sentences.append(
+                f'{kick} <span class="emphasize">{y} {pokemons}</span> ass.'
+            )
+        return ' '.join(sentences)
     except ValueError as e:
         print(e)
         return 'Invalid values were input.'
