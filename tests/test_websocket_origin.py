@@ -70,6 +70,14 @@ def _call_via_websocket(origin):
 
 @pytest.fixture
 def server():
+    # 起動済みの別プロセスに繋いでしまわないよう、
+    # ポートが空いていることを先に確かめます。
+    with socket.socket() as probe:
+        if probe.connect_ex(('127.0.0.1', 8000)) == 0:
+            pytest.fail(
+                'ポート 8000 が使用中です。アプリを止めてから実行してください。'
+            )
+
     env = {**os.environ, 'EEL_SERVER_MODE': '1'}
     script = ROOT / 'effort_leveling_support_eel.py'
     process = subprocess.Popen([sys.executable, script], cwd=ROOT, env=env)
