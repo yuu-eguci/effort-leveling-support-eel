@@ -39,7 +39,7 @@ pipenv run ruff format --check .
 pipenv run pytest
 ```
 
-GitHub Actions は master への push と pull request ごとに lint と test を実行。
+GitHub Actions は master への push と pull request ごとに lint 、 test 、 Docker のビルドと起動確認を実行。
 
 ## About
 
