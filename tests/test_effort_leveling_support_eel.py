@@ -11,8 +11,13 @@ def app(monkeypatch):
 
     calls = []
     monkeypatch.setattr(eel, 'expose', lambda function: function)
-    monkeypatch.setattr(eel, 'init', lambda *args, **kwargs: calls.append('init'))
-    monkeypatch.setattr(eel, 'start', lambda *args, **kwargs: calls.append('start'))
+    monkeypatch.setattr(
+        eel, 'init', lambda *args, **kwargs: calls.append(('init', args, kwargs))
+    )
+    monkeypatch.setattr(
+        eel, 'start', lambda *args, **kwargs: calls.append(('start', args, kwargs))
+    )
+    monkeypatch.delenv('EEL_SERVER_MODE', raising=False)
     sys.modules.pop('effort_leveling_support_eel', None)
     module = importlib.import_module('effort_leveling_support_eel')
     module.calls = calls
@@ -25,7 +30,21 @@ def test_import_does_not_start_app(app):
 
 def test_main_starts_app(app):
     app.main()
-    assert app.calls == ['init', 'start']
+    assert app.calls == [
+        ('init', ('web',), {}),
+        ('start', ('index.html',), {'size': (650, 500)}),
+    ]
+
+
+def test_main_starts_server_only_in_server_mode(app, monkeypatch):
+    monkeypatch.setenv('EEL_SERVER_MODE', '1')
+    app.main()
+    name, args, kwargs = app.calls[-1]
+    assert (name, args) == ('start', ('index.html',))
+    assert kwargs['mode'] is None
+    assert kwargs['all_interfaces'] is True
+    # タブを閉じてもサーバが終了しないよう、何もしない callback を渡します。
+    assert kwargs['close_callback']('index.html', []) is None
 
 
 @pytest.mark.parametrize(
