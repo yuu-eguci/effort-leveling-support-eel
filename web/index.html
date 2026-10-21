@@ -1,7 +1,8 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
 <head>
+  <meta charset="utf-8">
   <title>Effort Leveling Support Eel</title>
 
   <!-- NOTE: オフラインでも動くよう Bootstrap 4.6 を同梱しています。 -->
@@ -45,7 +46,7 @@
 
         <!-- EV を書くフォームです。 -->
         <div class="form-group">
-          <label>How much effort value do you want to pass to each pokemon?</label>
+          <label for="input_ev">How much effort value do you want to pass to each pokemon?</label>
           <div class="input-group mb-3">
             <input id="input_ev" type="number" class="form-control" value="252" min="1" step="1" required>
             <div class="input-group-append">
@@ -56,7 +57,7 @@
 
         <!-- 割り振るポケモン数を書くフォームです。 -->
         <div class="form-group">
-          <label>How many pokemons do you want to pass effort value to?</label>
+          <label for="input_pokemon_num">How many pokemons do you want to pass effort value to?</label>
           <div class="input-group mb-3">
             <input id="input_pokemon_num" type="number" class="form-control" value="1" min="1" step="1" required>
             <div class="input-group-append">
