@@ -1,0 +1,7 @@
+services:
+  app:
+    build: .
+    # Python が PID 1 だと SIGTERM で止まらないため、init を挟みます。
+    init: true
+    ports:
+      - "127.0.0.1:8000:8000"

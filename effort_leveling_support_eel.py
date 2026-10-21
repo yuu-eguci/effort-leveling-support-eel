@@ -1,3 +1,5 @@
+import os
+
 import eel
 
 
@@ -62,6 +64,18 @@ def main() -> None:
 
     # ウェブコンテンツの含まれるディレクトリを指定します。
     eel.init('web')
+
+    # EEL_SERVER_MODE=1 のときはブラウザを開かず、サーバだけを起動します。
+    # 待ち受けアドレスは EEL_HOST で変えられます (Docker では 0.0.0.0) 。
+    # タブを閉じても終了しないよう、何もしない close_callback を渡します。
+    if os.environ.get('EEL_SERVER_MODE') == '1':
+        eel.start(
+            'index.html',
+            mode=None,
+            host=os.environ.get('EEL_HOST', 'localhost'),
+            close_callback=lambda page, sockets: None,
+        )
+        return
 
     # 最初に表示する html です。
     eel.start('index.html', size=(650, 500))

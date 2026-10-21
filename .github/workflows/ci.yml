@@ -21,3 +21,11 @@ jobs:
       - run: pipenv run ruff check .
       - run: pipenv run ruff format --check .
       - run: pipenv run pytest
+
+  docker:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - run: docker compose up --build --detach --wait
+      - run: curl --fail --retry 5 --retry-connrefused http://localhost:8000/index.html
+      - run: docker compose down

@@ -3,6 +3,7 @@ effort-leveling-support-eel
 
 This app supports pokemon effort leveling.
 
+- Docker: 対応!
 - Python: 3.14!
 - Linter: Ruff!
 - Test: pytest!
@@ -11,11 +12,22 @@ This app supports pokemon effort leveling.
 ## パッと実行してみたい
 
 ```bash
+docker compose up --build
+```
+
+ブラウザで http://localhost:8000 を開く。
+
+Docker なしで動かすならこっち。
+
+```bash
 pipenv install
 pipenv run python effort_leveling_support_eel.py
 ```
 
 Chrome または Chromium のウィンドウでアプリが開く。
+
+`EEL_SERVER_MODE=1` でブラウザを開かずにサーバだけ起動。
+Docker はこのモードを使う。
 
 ## 開発
 
