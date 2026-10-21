@@ -44,6 +44,7 @@ def test_is_allowed_websocket_origin(origin, host, expected):
         ('192.168.1.5:8000', '192.168.1.5', True),
         ('0.0.0.0:8000', '0.0.0.0', False),
         ('', None, False),
+        ('[::1', None, False),
     ],
 )
 def test_is_allowed_websocket_host(monkeypatch, host, eel_host, expected):

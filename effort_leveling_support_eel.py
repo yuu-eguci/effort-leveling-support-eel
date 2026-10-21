@@ -93,7 +93,11 @@ def is_allowed_websocket_host(host: str) -> bool:
     eel_host = os.environ.get('EEL_HOST', '').lower()
     if eel_host and eel_host != '0.0.0.0':
         allowed.add(eel_host)
-    return urlsplit(f'//{host}').hostname in allowed
+    try:
+        return urlsplit(f'//{host}').hostname in allowed
+    except ValueError:
+        # "[::1" のような壊れた Host は許可しません。
+        return False
 
 
 def reject_cross_origin_websocket() -> None:
