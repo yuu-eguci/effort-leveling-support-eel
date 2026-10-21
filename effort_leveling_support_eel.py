@@ -1,5 +1,7 @@
 import os
+from urllib.parse import urlsplit
 
+import bottle
 import eel
 
 
@@ -68,11 +70,40 @@ def calculate(ev: int, num: int) -> tuple:
     return divmod(ev, ev_per_round)
 
 
+def is_allowed_websocket_origin(origin: str | None, host: str) -> bool:
+    """
+    WebSocket の接続元が、このアプリ自身のページかどうかを返します。
+    ほかのサイトのページから関数を呼ばれないよう、Origin と Host を突き合わせます。
+    """
+
+    # ブラウザ以外のクライアントは Origin を送らないので、そのまま通します。
+    if origin is None:
+        return True
+    return urlsplit(origin).netloc.lower() == host.lower()
+
+
+def reject_cross_origin_websocket() -> None:
+    """/eel への別オリジンからの接続を、関数を呼ばれる前に切断します。"""
+
+    request = bottle.request
+    if request.path == '/eel' and not is_allowed_websocket_origin(
+        request.get_header('Origin'), request.get_header('Host', '')
+    ):
+        # ハンドシェイクは gevent-websocket が先に済ませているので、ここで閉じます。
+        websocket = request.environ.get('wsgi.websocket')
+        if websocket is not None:
+            websocket.close()
+        bottle.abort(403, 'Cross-origin WebSocket is not allowed.')
+
+
 def main() -> None:
     """アプリを起動します。"""
 
     # ウェブコンテンツの含まれるディレクトリを指定します。
     eel.init('web')
+
+    # eel は bottle の既定アプリにルートを登録するので、そこへ Origin の検査を足します。
+    bottle.default_app().add_hook('before_request', reject_cross_origin_websocket)
 
     # EEL_SERVER_MODE=1 のときはブラウザを開かず、サーバだけを起動します。
     # 待ち受けアドレスは EEL_HOST で変えられます (Docker では 0.0.0.0) 。

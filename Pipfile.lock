@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "03f2b22db6011ac5e03a1a137b95a0d8e4c2be40ea23450081b47ae4fdc27248"
+            "sha256": "0d6e4a85d6af1bb662961b68e441fbfcdc0d57e53cad37b0a7b95bd4fe6e2e72"
         },
         "pipfile-spec": 6,
         "requires": {
@@ -21,6 +21,7 @@
                 "sha256:045684fbd2764eac9cdeb824861d1551d113e8b683d8d26e296898d3dd99a12e",
                 "sha256:787e78327e12b227938de02248333d788cfe45987edca735f8f88e03472c3f47"
             ],
+            "index": "pypi",
             "version": "==0.13.4"
         },
         "bottle-websocket": {

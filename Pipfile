@@ -8,6 +8,7 @@ pytest = "*"
 ruff = "*"
 
 [packages]
+bottle = "*"
 eel = "*"
 
 [requires]
