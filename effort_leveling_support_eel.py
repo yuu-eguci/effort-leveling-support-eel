@@ -54,8 +54,7 @@ def calculate(ev: int, num: int) -> tuple:
     # 群れバトル 1 周 (全員が 1 回ずつパワーアイテムを持つ) で 1 体が得る努力値です。
     # 自分が持つ回で 25、ほかの num - 1 体が持つ回で 5 ずつ得ます。
     ev_per_round = 25 + 5 * (num - 1)
-    x, y = divmod(ev, ev_per_round)
-    return (x, y)
+    return divmod(ev, ev_per_round)
 
 
 def main() -> None:
