@@ -31,13 +31,36 @@ def test_is_allowed_websocket_origin(origin, host, expected):
     assert app.is_allowed_websocket_origin(origin, host) is expected
 
 
-def _call_via_websocket(origin):
+@pytest.mark.parametrize(
+    ('host', 'eel_host', 'expected'),
+    [
+        ('localhost:8000', None, True),
+        ('127.0.0.1:8000', None, True),
+        ('[::1]:8000', None, True),
+        ('LOCALHOST:8000', None, True),
+        # DNS rebinding では、攻撃者のドメイン名が Host に入ります。
+        ('evil.example:8000', None, False),
+        ('192.168.1.5:8000', None, False),
+        ('192.168.1.5:8000', '192.168.1.5', True),
+        ('0.0.0.0:8000', '0.0.0.0', False),
+        ('', None, False),
+    ],
+)
+def test_is_allowed_websocket_host(monkeypatch, host, eel_host, expected):
+    if eel_host is None:
+        monkeypatch.delenv('EEL_HOST', raising=False)
+    else:
+        monkeypatch.setenv('EEL_HOST', eel_host)
+    assert app.is_allowed_websocket_host(host) is expected
+
+
+def _call_via_websocket(origin, host='localhost:8000'):
     """/eel へ接続して計算関数を呼び、返ってきたデータを返します。"""
 
     key = base64.b64encode(os.urandom(16)).decode()
     request = (
         'GET /eel?page=test HTTP/1.1\r\n'
-        'Host: localhost:8000\r\n'
+        f'Host: {host}\r\n'
         'Upgrade: websocket\r\n'
         'Connection: Upgrade\r\n'
         f'Sec-WebSocket-Key: {key}\r\n'
@@ -97,3 +120,8 @@ def server():
 def test_server_rejects_cross_origin_websocket(server):
     assert b'"return": 1' not in _call_via_websocket('http://evil.example')
     assert b'"return": 1' in _call_via_websocket('http://localhost:8000')
+
+
+def test_server_rejects_dns_rebinding_host(server):
+    origin = 'http://evil.example:8000'
+    assert b'"return": 1' not in _call_via_websocket(origin, 'evil.example:8000')

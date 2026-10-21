@@ -82,12 +82,28 @@ def is_allowed_websocket_origin(origin: str | None, host: str) -> bool:
     return urlsplit(origin).netloc.lower() == host.lower()
 
 
+def is_allowed_websocket_host(host: str) -> bool:
+    """
+    WebSocket のリクエストの Host が、このマシン自身を指しているかどうかを返します。
+    DNS rebinding では攻撃者のドメイン名が Host に入るので、ここで弾きます。
+    EEL_HOST に具体的なアドレスを指定したときは、そのアドレスも許可します。
+    """
+
+    allowed = {'localhost', '127.0.0.1', '::1'}
+    eel_host = os.environ.get('EEL_HOST', '').lower()
+    if eel_host and eel_host != '0.0.0.0':
+        allowed.add(eel_host)
+    return urlsplit(f'//{host}').hostname in allowed
+
+
 def reject_cross_origin_websocket() -> None:
-    """/eel への別オリジンからの接続を、関数を呼ばれる前に切断します。"""
+    """/eel への別オリジンや、このマシン以外の Host 宛ての接続を切断します。"""
 
     request = bottle.request
-    if request.path == '/eel' and not is_allowed_websocket_origin(
-        request.get_header('Origin'), request.get_header('Host', '')
+    host = request.get_header('Host', '')
+    if request.path == '/eel' and not (
+        is_allowed_websocket_host(host)
+        and is_allowed_websocket_origin(request.get_header('Origin'), host)
     ):
         # ハンドシェイクは gevent-websocket が先に済ませているので、ここで閉じます。
         websocket = request.environ.get('wsgi.websocket')
