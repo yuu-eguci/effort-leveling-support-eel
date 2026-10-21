@@ -41,17 +41,21 @@ def calculate(ev: int, num: int) -> tuple:
         上の説明参照
     y : int
         上の説明参照
+
+    Raises
+    ------
+    ValueError
+        ev または num が正の整数でないとき
     """
 
-    if ev <= 0 or num <= 0:
+    if not all(type(v) is int and v > 0 for v in (ev, num)):
         raise ValueError(f'Invalid value, ev:{ev}, num:{num}')
 
-    for x in range(100):
-        _ = (25 * x) + (x * 5 * (num - 1))
-        if _ > ev:
-            x -= 1
-            y = ev - ((25 * x) + (x * 5 * (num - 1)))
-            return (x, y)
+    # 群れバトル 1 周 (全員が 1 回ずつパワーアイテムを持つ) で 1 体が得る努力値です。
+    # 自分が持つ回で 25、ほかの num - 1 体が持つ回で 5 ずつ得ます。
+    ev_per_round = 25 + 5 * (num - 1)
+    x, y = divmod(ev, ev_per_round)
+    return (x, y)
 
 
 def main() -> None:

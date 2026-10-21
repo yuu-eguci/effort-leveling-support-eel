@@ -36,14 +36,30 @@ def test_main_starts_app(app):
         (24, 1, (0, 24)),
         (252, 3, (7, 7)),
         (252, 6, (5, 2)),
+        (10000, 1, (400, 0)),
+        (2520, 1, (100, 20)),
     ],
 )
 def test_calculate(app, ev, num, expected):
     assert app.calculate(ev, num) == expected
 
 
-@pytest.mark.parametrize(('ev', 'num'), [(0, 1), (252, 0), (-1, 1)])
-def test_calculate_rejects_non_positive_values(app, ev, num):
+@pytest.mark.parametrize(
+    ('ev', 'num'),
+    [
+        (0, 1),
+        (252, 0),
+        (-1, 1),
+        (2.5, 1),
+        (252, 1.5),
+        (252.0, 1),
+        (float('nan'), 1),
+        (True, 1),
+        ('252', 1),
+        (None, 1),
+    ],
+)
+def test_calculate_rejects_invalid_values(app, ev, num):
     with pytest.raises(ValueError):
         app.calculate(ev, num)
 
@@ -54,5 +70,6 @@ def test_get_calculation_result_text(app):
     assert '<span class="emphasize">2 pokemons\'</span>' in text
 
 
-def test_get_calculation_result_text_with_invalid_values(app):
-    assert app.get_calculation_result_text(0, 1) == 'Invalid values were input.'
+@pytest.mark.parametrize(('ev', 'num'), [(0, 1), (2.5, 1), (None, 1)])
+def test_get_calculation_result_text_with_invalid_values(app, ev, num):
+    assert app.get_calculation_result_text(ev, num) == 'Invalid values were input.'
