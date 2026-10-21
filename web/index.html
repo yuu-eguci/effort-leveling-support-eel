@@ -18,16 +18,16 @@
 
 <body>
 
-  <div class="m-3 card">
+  <main class="m-3 card">
     <div class="card-header">
-      <ul class="nav nav-tabs card-header-tabs">
-        <li class="nav-item">
+      <ul class="nav nav-tabs card-header-tabs" role="tablist">
+        <li class="nav-item" role="presentation">
           <a id="nav-1-tab" href="#nav-1" class="nav-link active" data-toggle="tab" role="tab" aria-selected="true"
             aria-controls="nav-1">
             Effort Leveling Support
           </a>
         </li>
-        <li class="nav-item">
+        <li class="nav-item" role="presentation">
           <a id="nav-2-tab" href="#nav-2" class="nav-link" data-toggle="tab" role="tab" aria-selected="false"
             aria-controls="nav-2">
             About app
@@ -37,40 +37,42 @@
     </div>
 
     <div class="tab-content card-body">
-      <form id="nav-1" class="tab-pane fade show active" role="tabpanel" aria-labelledby="nav-1-tab">
+      <div id="nav-1" class="tab-pane fade show active" role="tabpanel" aria-labelledby="nav-1-tab">
+        <form id="form_calculation">
 
-        <!-- 結果表示欄です。 -->
-        <div id="div_alert" class="alert alert-info text-center" role="alert">
-          The result's gonna be written here.
-        </div>
+          <!-- 結果表示欄です。 -->
+          <div id="div_alert" class="alert alert-info text-center" role="alert">
+            The result's gonna be written here.
+          </div>
 
-        <!-- EV を書くフォームです。 -->
-        <div class="form-group">
-          <label for="input_ev">How much effort value do you want to pass to each pokemon?</label>
-          <div class="input-group mb-3">
-            <input id="input_ev" type="number" class="form-control" value="252" min="1" step="1" required>
-            <div class="input-group-append">
-              <span class="input-group-text">effort values</span>
+          <!-- EV を書くフォームです。 -->
+          <div class="form-group">
+            <label for="input_ev">How much effort value do you want to pass to each pokemon?</label>
+            <div class="input-group mb-3">
+              <input id="input_ev" type="number" class="form-control" value="252" min="1" step="1" required>
+              <div class="input-group-append">
+                <span class="input-group-text">effort values</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- 割り振るポケモン数を書くフォームです。 -->
-        <div class="form-group">
-          <label for="input_pokemon_num">How many pokemons do you want to pass effort value to?</label>
-          <div class="input-group mb-3">
-            <input id="input_pokemon_num" type="number" class="form-control" value="1" min="1" step="1" required>
-            <div class="input-group-append">
-              <span class="input-group-text">pokemon(s)</span>
+          <!-- 割り振るポケモン数を書くフォームです。 -->
+          <div class="form-group">
+            <label for="input_pokemon_num">How many pokemons do you want to pass effort value to?</label>
+            <div class="input-group mb-3">
+              <input id="input_pokemon_num" type="number" class="form-control" value="1" min="1" step="1" required>
+              <div class="input-group-append">
+                <span class="input-group-text">pokemon(s)</span>
+              </div>
             </div>
           </div>
-        </div>
 
-        <!-- 「計算する」ボタンです。 -->
-        <div class="text-center">
-          <button id="b" type="submit" class="btn btn-outline-info">Calculate!</button>
-        </div>
-      </form>
+          <!-- 「計算する」ボタンです。 -->
+          <div class="text-center">
+            <button id="b" type="submit" class="btn btn-outline-info">Calculate!</button>
+          </div>
+        </form>
+      </div>
 
       <div id="nav-2" class="tab-pane fade" role="tabpanel" aria-labelledby="nav-2-tab">
         <p class="card-text">
@@ -80,7 +82,7 @@
       </div>
     </div>
 
-  </div>
+  </main>
 
   <!-- NOTE: jQuery と Bootstrap (Popper 込み) も同梱しています。 -->
   <script src="vendor/jquery.slim.min.js"></script>
@@ -92,7 +94,7 @@
     $(function() {
 
       // ボタン押下時や Enter キー押下時に計算を行います。
-      $('#nav-1').on('submit', async function(event) {
+      $('#form_calculation').on('submit', async function(event) {
 
         // ページの再読み込みを止めます。
         event.preventDefault();

@@ -14,10 +14,12 @@ class _Collector(HTMLParser):
         self.labels = []
         self.html_attrs = {}
         self.meta_charsets = []
+        self.tags = []
         self._form_depth = 0
 
     def handle_starttag(self, tag, attrs):
         attrs = dict(attrs)
+        self.tags.append((tag, attrs))
         if tag == 'form':
             self._form_depth += 1
         if tag == 'html':
@@ -31,6 +33,7 @@ class _Collector(HTMLParser):
         if tag == 'link' and attrs.get('rel') == 'stylesheet':
             self.assets.append(attrs['href'])
         if 'id' in attrs:
+            attrs['tag'] = tag
             attrs['in_form'] = self._form_depth > 0
             self.elements[attrs['id']] = attrs
 
@@ -79,3 +82,22 @@ def test_document_declares_language_and_charset():
     collector = _collect()
     assert collector.html_attrs.get('lang') == 'en'
     assert [c.lower() for c in collector.meta_charsets] == ['utf-8']
+
+
+def test_tabs_are_owned_by_tablist():
+    tags = _collect().tags
+    nav = [a for t, a in tags if t == 'ul' and 'nav-tabs' in a.get('class', '')]
+    assert [a.get('role') for a in nav] == ['tablist']
+    items = [a for t, a in tags if t == 'li' and 'nav-item' in a.get('class', '')]
+    assert items
+    assert all(a.get('role') == 'presentation' for a in items)
+
+
+def test_tabpanels_are_not_forms():
+    elements = _collect().elements
+    for panel_id in ('nav-1', 'nav-2'):
+        assert elements[panel_id]['tag'] == 'div', panel_id
+
+
+def test_page_has_main_landmark():
+    assert [t for t, _ in _collect().tags].count('main') == 1
