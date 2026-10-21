@@ -4,8 +4,8 @@
 <head>
   <title>Effort Leveling Support Eel</title>
 
-  <!-- NOTE: Bootstrap4.5公式サイトより。 -->
-  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css">
+  <!-- NOTE: オフラインでも動くよう Bootstrap 4.6 を同梱しています。 -->
+  <link rel="stylesheet" href="vendor/bootstrap.min.css">
 
   <!-- Custom -->
   <style>
@@ -36,7 +36,7 @@
     </div>
 
     <div class="tab-content card-body">
-      <div id="nav-1" class="tab-pane fade show active" role="tabpanel" aria-labelledby="nav-1-tab">
+      <form id="nav-1" class="tab-pane fade show active" role="tabpanel" aria-labelledby="nav-1-tab">
 
         <!-- 結果表示欄です。 -->
         <div id="div_alert" class="alert alert-info text-center" role="alert">
@@ -47,7 +47,7 @@
         <div class="form-group">
           <label>How much effort value do you want to pass to each pokemon?</label>
           <div class="input-group mb-3">
-            <input id="input_ev" type="number" class="form-control" value="252">
+            <input id="input_ev" type="number" class="form-control" value="252" min="1" step="1" required>
             <div class="input-group-append">
               <span class="input-group-text">effort values</span>
             </div>
@@ -58,7 +58,7 @@
         <div class="form-group">
           <label>How many pokemons do you want to pass effort value to?</label>
           <div class="input-group mb-3">
-            <input id="input_pokemon_num" type="number" class="form-control" value="1">
+            <input id="input_pokemon_num" type="number" class="form-control" value="1" min="1" step="1" required>
             <div class="input-group-append">
               <span class="input-group-text">pokemon(s)</span>
             </div>
@@ -67,9 +67,9 @@
 
         <!-- 「計算する」ボタンです。 -->
         <div class="text-center">
-          <button id="b" type="button" class="btn btn-outline-info">Calculate!</button>
+          <button id="b" type="submit" class="btn btn-outline-info">Calculate!</button>
         </div>
-      </div>
+      </form>
 
       <div id="nav-2" class="tab-pane fade" role="tabpanel" aria-labelledby="nav-2-tab">
         <p class="card-text">
@@ -81,19 +81,20 @@
 
   </div>
 
-  <!-- NOTE: Bootstrap4.5公式サイトより。 -->
-  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"></script>
-  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js"></script>
+  <!-- NOTE: jQuery と Bootstrap (Popper 込み) も同梱しています。 -->
+  <script src="vendor/jquery.slim.min.js"></script>
+  <script src="vendor/bootstrap.bundle.min.js"></script>
 
   <!-- eel を JavaScript から利用します。 -->
   <script src="/eel.js"></script>
   <script>
     $(function() {
 
-      // ボタン押下時に計算を行います。
-      $('#b').on('click', async function() {
+      // ボタン押下時や Enter キー押下時に計算を行います。
+      $('#nav-1').on('submit', async function(event) {
 
+        // ページの再読み込みを止めます。
+        event.preventDefault();
         await calculate($('#input_ev').val(), $('#input_pokemon_num').val());
 
       });
