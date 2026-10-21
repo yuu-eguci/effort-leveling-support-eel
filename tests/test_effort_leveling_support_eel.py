@@ -124,7 +124,9 @@ def test_main_uses_eel_host_in_server_mode(app, monkeypatch):
     assert app.calls[-1][2]['host'] == '0.0.0.0'
 
 
-def test_main_falls_back_to_default_browser_without_chrome(app, monkeypatch):
+def test_main_falls_back_to_default_browser_without_chrome(app, monkeypatch, capsys):
     monkeypatch.setattr(eel.chrome, 'find_path', lambda: None)
     app.main()
     assert app.calls[-1] == ('start', ('index.html',), {'mode': 'default'})
+    # 既定のブラウザも開けない環境向けに、開く URL を表示します。
+    assert 'http://localhost:8000/index.html' in capsys.readouterr().out

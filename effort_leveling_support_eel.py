@@ -138,7 +138,9 @@ def main() -> None:
         return
 
     # Chrome も Chromium も見つからないときは、既定のブラウザで開きます。
+    # 既定のブラウザも開けない環境向けに、開く URL を表示しておきます。
     if eel.chrome.find_path() is None:
+        print('Open http://localhost:8000/index.html in your browser.', flush=True)
         eel.start('index.html', mode='default')
         return
 
